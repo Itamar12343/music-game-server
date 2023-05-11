@@ -9,11 +9,13 @@ io.on("connection", socket => {
     let prevRoom;
 
     socket.on("join game", room => {
-        //console.log("leave");
-        console.log(room);
+        if (prevRoom !== room) {
+            socket.leave(prevRoom);
+            prevRoom = room;
+        }
         socket.join(room);
         let numberOfUsers = io.sockets.adapter.rooms.get(room).size;
-        //console.log(numberOfUsers);
+        socket.emit("room status", { room, numberOfUsers });
     });
 
 });
